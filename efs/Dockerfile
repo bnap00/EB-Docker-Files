@@ -1,4 +1,4 @@
-FROM alpine
+FROM python:alpine
 RUN apk add --update nfs-utils bash curl zip jq && \
   curl "https://s3.amazonaws.com/aws-cli/awscli-bundle.zip" -o "awscli-bundle.zip" && \
   unzip awscli-bundle.zip && \
