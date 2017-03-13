@@ -14,7 +14,7 @@ RUN echo "deb http://download.opensuse.org/repositories/home:/rtCamp:/EasyEngine
       -o Dpkg::Options::="--force-confold" \
       -y install nginx-custom nginx-ee \
     && rm -rf /var/lib/apt/lists/*
-RUN apt update && apt install curl 
+RUN apt update && apt install curl && apt install nfs-common
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log

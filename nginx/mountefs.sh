@@ -1,9 +1,8 @@
 #!/bin/bash
-EFS_REGION=$REGION
 EFS_MOUNT_DIR=$MOUNT_DIRECTORY
-EFS_FILE_SYSTEM_ID=$FILE_SYSTEM_ID
+EFS_FILE_SYSTEM_URL=$FILE_SYSTEM_URL
 
-echo "Mounting EFS filesystem ${EFS_DNS_NAME} to directory ${EFS_MOUNT_DIR} ..."
+echo "Mounting EFS filesystem to directory ${EFS_MOUNT_DIR} ..."
 
 echo 'Stopping NFS ID Mapper...'
 service rpcidmapd status &> /dev/null
@@ -36,8 +35,8 @@ fi
 
 mountpoint -q ${EFS_MOUNT_DIR}
 if [ $? -ne 0 ]; then
-    echo "mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${EFS_FILE_SYSTEM_ID}.efs.${EFS_REGION}.amazonaws.com:/ ${EFS_MOUNT_DIR}"
-    mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${EFS_FILE_SYSTEM_ID}.efs.${EFS_REGION}.amazonaws.com:/ ${EFS_MOUNT_DIR}
+    echo "mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${FILE_SYSTEM_URL} ${EFS_MOUNT_DIR}"
+    mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${FILE_SYSTEM_URL} ${EFS_MOUNT_DIR}
     if [ $? -ne 0 ] ; then
         echo 'ERROR: Mount command failed!'
         exit 1
