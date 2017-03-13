@@ -14,11 +14,11 @@ RUN echo "deb http://download.opensuse.org/repositories/home:/rtCamp:/EasyEngine
       -o Dpkg::Options::="--force-confold" \
       -y install nginx-custom nginx-ee \
     && rm -rf /var/lib/apt/lists/*
-
+RUN apt update && apt install curl 
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
 EXPOSE 80 443
-CMD ["bash","curl -s https://raw.githubusercontent.com/bnap00/EB-Docker-Files/master/nginx/mountefs.sh | bash"]
+CMD ["curl -s https://raw.githubusercontent.com/bnap00/EB-Docker-Files/master/nginx/mountefs.sh | bash"]
 CMD ["nginx", "-g", "daemon off;"]
