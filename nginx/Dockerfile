@@ -20,5 +20,6 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
 	&& ln -sf /dev/stderr /var/log/nginx/error.log
 
 EXPOSE 80 443
-CMD ["curl -s https://raw.githubusercontent.com/bnap00/EB-Docker-Files/master/nginx/mountefs.sh | bash"]
+ADD mountefs.sh /usr/local/bin/run.sh
+CMD ["/usr/local/bin/run.sh"]
 CMD ["nginx", "-g", "daemon off;"]
