@@ -1,8 +1,7 @@
 #!/bin/bash
-EFS_MOUNT_DIR=$MOUNT_DIRECTORY
 EFS_FILE_SYSTEM_URL=$FILE_SYSTEM_URL
 
-echo "Mounting EFS filesystem to directory ${EFS_MOUNT_DIR} ..."
+echo "Mounting EFS filesystem to directory ${MOUNT_DIRECTORY} ..."
 
 echo 'Stopping NFS ID Mapper...'
 service rpcidmapd status &> /dev/null
@@ -17,32 +16,36 @@ else
 fi
 
 echo 'Checking if EFS mount directory exists...'
-if [ ! -d ${EFS_MOUNT_DIR} ]; then
-    echo "Creating directory ${EFS_MOUNT_DIR} ..."
-    mkdir -p ${EFS_MOUNT_DIR}
+if [ ! -d ${MOUNT_DIRECTORY} ]; then
+    echo "Creating directory ${MOUNT_DIRECTORY} ..."
+    mkdir -p ${MOUNT_DIRECTORY}
     if [ $? -ne 0 ]; then
         echo 'ERROR: Directory creation failed!'
         exit 1
     fi
-    chmod 777 ${EFS_MOUNT_DIR}
+    chmod 777 ${MOUNT_DIRECTORY}
     if [ $? -ne 0 ]; then
         echo 'ERROR: Permission update failed!'
         exit 1
     fi
 else
-    echo "Directory ${EFS_MOUNT_DIR} already exists!"
+    echo "Directory ${MOUNT_DIRECTORY} already exists!"
 fi
 
-mountpoint -q ${EFS_MOUNT_DIR}
+mountpoint -q ${MOUNT_DIRECTORY}
 if [ $? -ne 0 ]; then
-    echo "mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${FILE_SYSTEM_URL} ${EFS_MOUNT_DIR}"
-    mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${FILE_SYSTEM_URL} ${EFS_MOUNT_DIR}
+    umount ${MOUNT_DIRECTORY}
+fi
+mountpoint -q ${MOUNT_DIRECTORY}
+if [ $? -ne 0 ]; then
+    echo "mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${FILE_SYSTEM_URL} ${MOUNT_DIRECTORY}"
+    mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 ${FILE_SYSTEM_URL} ${MOUNT_DIRECTORY}
     if [ $? -ne 0 ] ; then
         echo 'ERROR: Mount command failed!'
         exit 1
     fi
 else
-    echo "Directory ${EFS_MOUNT_DIR} is already a valid mountpoint!"
+    echo "Directory ${MOUNT_DIRECTORY} is already a valid mountpoint!"
 fi
 
 echo 'EFS mount complete.'
